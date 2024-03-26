@@ -57,7 +57,9 @@ export default class Asteroid {
   }
 
   #updateParticlesCount() {
+    // add particles
     if (this.nParticles < parameters.nParticles) {
+      const p = new Particle()
     }
   }
 }
