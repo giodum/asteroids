@@ -6,8 +6,20 @@ import gsap from 'gsap'
 import math from 'canvas-sketch-util/math'
 import random from 'canvas-sketch-util/random'
 
+import Asteroid from './Asteroid'
+
 const DEV_HELPERS = true
 const DEV_WIREFRAMES = true
+
+const parameters = {
+  minRadius: 30,
+  maxRadius: 50,
+  minSpeed: 0.015,
+  maxSpeed: 0.025,
+  particles: 300,
+  minSize: 0.1,
+  maxSize: 2,
+}
 
 export default class Scene3D {
   // unique instance
@@ -42,8 +54,8 @@ export default class Scene3D {
     // init lights
     this.#initLights()
 
-    // test scene
-    this.#testScene()
+    this.asteroid = new Asteroid(parameters)
+    this.scene.add(this.asteroid.mesh)
 
     // add event listeners
     this.eventListeners()
@@ -62,6 +74,7 @@ export default class Scene3D {
     this.renderer.setSize(this.#window.width, this.#window.height)
     this.renderer.setPixelRatio(window.devicePixelRatio)
     this.renderer.setClearColor(0x000000, 0)
+    this.renderer.shadowMap = true
 
     // init scene
     this.scene = new THREE.Scene()
@@ -83,12 +96,12 @@ export default class Scene3D {
   #initCamera() {
     // init camera
     this.camera = new THREE.PerspectiveCamera(
-      50,
+      75,
       this.#window.aspectRatio,
       0.1,
-      100
+      2000
     )
-    this.camera.position.set(10, 10, 10)
+    this.camera.position.set(0, 0, 100)
     this.camera.lookAt(new THREE.Vector3(0, 0, 0))
   }
 
@@ -98,19 +111,30 @@ export default class Scene3D {
   }
 
   #initLights() {
-    this.ambientLight = new THREE.AmbientLight(0xffffff, 10)
-    this.ambientLight.position.set(0, 0, 0)
+    // ambient light
+    this.ambientLight = new THREE.AmbientLight(0x663344, 2)
     this.scene.add(this.ambientLight)
-  }
 
-  #testScene() {
-    const geometry = new THREE.SphereGeometry(3, 20, 20)
-    const material = new THREE.MeshStandardMaterial({
-      color: 0x444,
-      wireframe: DEV_WIREFRAMES,
-    })
-    const mesh = new THREE.Mesh(geometry, material)
-    this.scene.add(mesh)
+    // directional light
+    this.directionalLight = new THREE.DirectionalLight(0xffffff, 1.5)
+    this.directionalLight.position.set(200, 100, 200)
+    this.directionalLight.shadow.camera.left = -400
+    this.directionalLight.shadow.camera.right = 400
+    this.directionalLight.shadow.camera.top = 400
+    this.directionalLight.shadow.camera.bottom = -400
+    this.directionalLight.shadow.camera.near = 1
+    this.directionalLight.shadow.camera.far = 1000
+    this.directionalLight.shadow.camera.width = 2048
+    this.directionalLight.shadow.camera.height = 2048
+    this.scene.add(this.directionalLight)
+
+    if (DEV_HELPERS) {
+      const directionalLightHelper = new THREE.DirectionalLightHelper(
+        this.directionalLight,
+        10
+      )
+      this.scene.add(this.directionalLight)
+    }
   }
 
   eventListeners() {
