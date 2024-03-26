@@ -16,7 +16,7 @@ const parameters = {
   maxRadius: 50,
   minSpeed: 0.015,
   maxSpeed: 0.025,
-  particles: 300,
+  nParticles: 300,
   minSize: 0.1,
   maxSize: 2,
 }
