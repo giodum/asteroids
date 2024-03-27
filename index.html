@@ -3,15 +3,18 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <link
-      href="https://cdn.jsdelivr.net/npm/reset-css@5.0.2/reset.min.css"
-      rel="stylesheet" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
 
     <!-- font loading  -->
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
       href="https://fonts.googleapis.com/css2?family=Outfit:wght@100..900&display=swap"
+      rel="stylesheet" />
+
+    <!-- reset css -->
+    <link
+      href="https://cdn.jsdelivr.net/npm/reset-css@5.0.2/reset.min.css"
       rel="stylesheet" />
 
     <!-- favicon -->
@@ -37,11 +40,15 @@
     <link rel="shortcut icon" href="/favicons/favicon.ico?v=1" />
     <meta name="msapplication-TileColor" content="#1e1e1e" />
     <meta name="theme-color" content="#1e1e1e" />
-    <title>moijesuisjo</title>
+
+    <title>Asteroids - moijesuisjo</title>
   </head>
   <body>
     <div id="app">
       <canvas id="3dscene"></canvas>
+      <div class="info">
+        <div class="info-button"></div>
+      </div>
     </div>
     <script type="module" src="/src/js/main.js"></script>
   </body>

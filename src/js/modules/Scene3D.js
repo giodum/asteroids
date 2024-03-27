@@ -3,6 +3,8 @@ import {OrbitControls} from 'three/examples/jsm/controls/OrbitControls.js'
 
 import gsap from 'gsap'
 
+import Stats from 'stats.js'
+
 import Asteroid from './Asteroid'
 import Parameters from './Parameters'
 
@@ -26,6 +28,12 @@ export default class Scene3D {
     if (Scene3D.item) {
       throw new Error('Scene3D has already been initialized')
     }
+
+    // init stats
+    this.stats = new Stats()
+    this.stats.showPanel(0)
+    document.body.appendChild(this.stats.dom)
+    this.stats.dom.classList.add('stats')
 
     // get reference to parameters
     this.parameters = Parameters.getInstance()
@@ -152,12 +160,16 @@ export default class Scene3D {
   animate(time) {
     requestAnimationFrame((time) => this.animate(time))
 
+    this.stats.begin()
+
     // update asteroid
     this.asteroid.update()
 
     // clear buffer and render the scene
     this.renderer.clear()
     this.renderer.render(this.scene, this.camera)
+
+    this.stats.end()
   }
 
   mouseMove(event) {
