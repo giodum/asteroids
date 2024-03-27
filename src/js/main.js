@@ -2,8 +2,8 @@
 
 import '/src/scss/main.scss'
 
-import Scene3D from './modules/Scene3D'
 import Info from './modules/Info'
+import Scene3D from './modules/Scene3D'
 
 export default class Main {
   constructor() {
