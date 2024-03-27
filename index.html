@@ -41,13 +41,50 @@
     <meta name="msapplication-TileColor" content="#1e1e1e" />
     <meta name="theme-color" content="#1e1e1e" />
 
-    <title>Asteroids - moijesuisjo</title>
+    <title>Asteroid</title>
+    <meta
+      name="description"
+      content="moijesuisjo - creative front-end developer" />
+    <meta name="author" content="Giorgio Maria Duminuco" />
   </head>
   <body>
     <div id="app">
       <canvas id="3dscene"></canvas>
       <div class="info">
-        <div class="info-button"></div>
+        <div class="info-button">
+          <img
+            src="/logo.svg"
+            alt="moijesuisjo - creative front-end developer" />
+        </div>
+        <div class="info-modal">
+          <div class="info-section">
+            <div class="info-title">Asteroid ☄️</div>
+            <div class="info-description">
+              Simple Three.js project with an asteroid core and particles
+              orbitating. Random generation of colors, shapes and sizes.
+            </div>
+          </div>
+
+          <div class="info-section">
+            <div class="info-title">Instruction</div>
+            <div class="info-description">
+              Drag and drop the scren to change perspective.<br />
+              Use controls on top right to change parameters.<br />
+              Have fun!
+            </div>
+          </div>
+
+          <div class="info-section">
+            <div class="info-title">References</div>
+            <div class="info-description">
+              Code inspired by
+              <a href="https://yakudoo.com/" target="_blank">Yakudoo</a> -
+              <a href="https://codepen.io/Yakudoo" target="_blank"
+                >Yakudoo Codepen</a
+              >
+            </div>
+          </div>
+        </div>
       </div>
     </div>
     <script type="module" src="/src/js/main.js"></script>

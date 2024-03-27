@@ -3,6 +3,7 @@
 import '/src/scss/main.scss'
 
 import Scene3D from './modules/Scene3D'
+import Info from './modules/Info'
 
 export default class Main {
   constructor() {
@@ -10,6 +11,7 @@ export default class Main {
   }
 
   init() {
+    Info.init()
     Scene3D.init()
   }
 }
