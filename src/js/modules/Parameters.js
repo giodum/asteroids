@@ -1,17 +1,22 @@
 import {GUI} from 'dat.gui'
 
+import random from 'canvas-sketch-util/random'
+
+import palettes from 'nice-color-palettes'
+
 // singleton pattern
 export default class Parameters {
-  static #colors = [0x8fc999, 0x5fc4d0, 0xee5624, 0xfaff70]
+  // static #colors = [0x8fc999, 0x5fc4d0, 0xee5624, 0xfaff70]
+  static #colors = random.shuffle(random.pick(palettes))
 
   static #params = {
     minRadius: 30,
     maxRadius: 50,
-    minSpeed: 0.015,
-    maxSpeed: 0.025,
-    nParticles: 300,
-    minSize: 0.1,
-    maxSize: 2,
+    minSpeed: 0.01,
+    maxSpeed: 0.02,
+    nParticles: 200,
+    minSize: 0.3,
+    maxSize: 1.7,
     coreRotation: 0.005,
   }
 
@@ -36,6 +41,10 @@ export default class Parameters {
   // public getter for colors
   get colors() {
     return Parameters.#colors
+  }
+
+  popColor() {
+    return Parameters.#colors.pop()
   }
 
   // setter object for callback functions

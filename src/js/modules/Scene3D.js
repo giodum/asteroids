@@ -3,9 +3,6 @@ import {OrbitControls} from 'three/examples/jsm/controls/OrbitControls.js'
 
 import gsap from 'gsap'
 
-import math from 'canvas-sketch-util/math'
-import random from 'canvas-sketch-util/random'
-
 import Asteroid from './Asteroid'
 import Parameters from './Parameters'
 
@@ -67,13 +64,14 @@ export default class Scene3D {
   #initRendererAndScene() {
     // init renderer
     this.renderer = new THREE.WebGLRenderer({
-      alpha: true,
+      // alpha: true,
       antialias: true,
       canvas: document.querySelector('canvas'),
     })
     this.renderer.setSize(this.#window.width, this.#window.height)
     this.renderer.setPixelRatio(window.devicePixelRatio)
-    this.renderer.setClearColor(0x000000, 0)
+
+    this.renderer.setClearColor(this.parameters.popColor())
     this.renderer.shadowMap = true
 
     // init scene
@@ -101,7 +99,7 @@ export default class Scene3D {
       0.1,
       2000
     )
-    this.camera.position.set(0, 40, 90)
+    this.camera.position.set(0, 40, 85)
     this.camera.lookAt(new THREE.Vector3(0, 0, 0))
 
     if (DEV_HELPERS) {

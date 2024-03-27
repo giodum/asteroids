@@ -30,8 +30,11 @@ export default class Particle {
       const pyramidGeometry = new THREE.CylinderGeometry(0, 1, 2, 4, 1)
       Particle.geometries.push(pyramidGeometry)
 
-      const tethraedronGeometry = new THREE.TetrahedronGeometry(1, 2)
-      Particle.geometries.push(tethraedronGeometry)
+      const tethraedronGeometry2detail = new THREE.TetrahedronGeometry(1, 2)
+      Particle.geometries.push(tethraedronGeometry2detail)
+
+      const tethraedronGeometry1detail = new THREE.TetrahedronGeometry(1, 1)
+      Particle.geometries.push(tethraedronGeometry1detail)
 
       const plateGeometry = new THREE.BoxGeometry(1 / 6, 2)
       Particle.geometries.push(plateGeometry)
