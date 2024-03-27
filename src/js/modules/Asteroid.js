@@ -60,7 +60,7 @@ export default class Asteroid {
 
     // create ring of particles
     this.#initParticles()
-    this.#updateParticlesCount()
+    this.updateParticlesCount()
 
     // create unique mesh for planet and ring
     this.asteroidObject = new THREE.Group()
@@ -76,7 +76,38 @@ export default class Asteroid {
     this.nParticles = 0
   }
 
-  #updateParticlesCount() {
+  #updateParticlesMovement() {
+    for (let i = 0; i < this.nParticles; i++) {
+      // console.log('updating')
+
+      // get the current particle
+      const particleMesh = this.ring.children[i]
+
+      // increase rotation angle based on its angular speed
+      particleMesh.userData.angle += particleMesh.userData.angularSpeed
+
+      // compute the new position of the particle (revolution movement)
+      // polar to cartesian coordinates
+      const x =
+        Math.cos(particleMesh.userData.angle) * particleMesh.userData.distance
+      const z =
+        Math.sin(particleMesh.userData.angle) * particleMesh.userData.distance
+      particleMesh.position.x = x
+      particleMesh.position.z = z
+
+      // add rotation on proper axis
+      particleMesh.rotation.x += random.range(0, 0.05)
+      particleMesh.rotation.y += random.range(0, 0.05)
+      particleMesh.rotation.z += random.range(0, 0.05)
+    }
+  }
+
+  #updateCoreMovement() {
+    // update rotation on proper axis
+    this.core.rotation.y -= this.parameters.params.coreRotation
+  }
+
+  updateParticlesCount() {
     // check the current number of particles
     // compared with the one defined by params
 
@@ -108,10 +139,10 @@ export default class Asteroid {
     this.particlesAngleStep = (Math.PI * 2) / this.nParticles
 
     // update particles definition
-    this.#updateParticlesDefinition()
+    this.updateParticlesDefinition()
   }
 
-  #updateParticlesDefinition() {
+  updateParticlesDefinition() {
     for (let i = 0; i < this.nParticles; i++) {
       const particleMesh = this.ring.children[i]
 
@@ -140,37 +171,6 @@ export default class Asteroid {
         this.parameters.params.maxSpeed
       )
     }
-  }
-
-  #updateParticlesMovement() {
-    for (let i = 0; i < this.nParticles; i++) {
-      // console.log('updating')
-
-      // get the current particle
-      const particleMesh = this.ring.children[i]
-
-      // increase rotation angle based on its angular speed
-      particleMesh.userData.angle += particleMesh.userData.angularSpeed
-
-      // compute the new position of the particle (revolution movement)
-      // polar to cartesian coordinates
-      const x =
-        Math.cos(particleMesh.userData.angle) * particleMesh.userData.distance
-      const z =
-        Math.sin(particleMesh.userData.angle) * particleMesh.userData.distance
-      particleMesh.position.x = x
-      particleMesh.position.z = z
-
-      // add rotation on proper axis
-      particleMesh.rotation.x += random.range(0, 0.05)
-      particleMesh.rotation.y += random.range(0, 0.05)
-      particleMesh.rotation.z += random.range(0, 0.05)
-    }
-  }
-
-  #updateCoreMovement() {
-    // update rotation on proper axis
-    this.core.rotation.y -= 0.011
   }
 
   update() {

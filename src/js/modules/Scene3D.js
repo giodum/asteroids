@@ -53,6 +53,10 @@ export default class Scene3D {
     this.asteroid.asteroidObject.rotation.z = Math.PI / 10
     this.scene.add(this.asteroid.asteroidObject)
 
+    // set object for callbacks and init GUI
+    this.parameters.setObject(this.asteroid)
+    this.parameters.initGui()
+
     // add event listeners
     this.eventListeners()
 
