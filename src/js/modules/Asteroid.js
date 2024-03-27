@@ -4,6 +4,7 @@ import random from 'canvas-sketch-util/random'
 
 import Parameters from './Parameters'
 import Particle from './Particle'
+import math from 'canvas-sketch-util/math'
 
 export default class Asteroid {
   constructor(radius = 20) {
@@ -18,19 +19,19 @@ export default class Asteroid {
   }
 
   #initAsteroid(radius) {
-    // create geometry
-    this.geometry = new THREE.TetrahedronGeometry(radius, 2)
+    // create core geometry
+    this.coreGeometry = new THREE.TetrahedronGeometry(radius, 2)
 
     // randomize a little bit the geometry
     for (
       let i = 0;
-      i < this.geometry.attributes.position.array.length;
+      i < this.coreGeometry.attributes.position.array.length;
       i += 3
     ) {
       // get initial (x, y, z) values
-      const x = this.geometry.attributes.position.array[i]
-      const y = this.geometry.attributes.position.array[i + 1]
-      const z = this.geometry.attributes.position.array[i + 2]
+      const x = this.coreGeometry.attributes.position.array[i]
+      const y = this.coreGeometry.attributes.position.array[i + 1]
+      const z = this.coreGeometry.attributes.position.array[i + 2]
 
       // get perlin noise value
       const perlin = random.noise3D(
@@ -40,25 +41,37 @@ export default class Asteroid {
       )
 
       // update cohordinates
-      this.geometry.attributes.position.array[i] += perlin * radius * 0.25
-      this.geometry.attributes.position.array[i + 1] += perlin * radius * 0.25
-      this.geometry.attributes.position.array[i + 2] += perlin * radius * 0.25
+      this.coreGeometry.attributes.position.array[i] += perlin * radius * 0.25
+      this.coreGeometry.attributes.position.array[i + 1] +=
+        perlin * radius * 0.25
+      this.coreGeometry.attributes.position.array[i + 2] +=
+        perlin * radius * 0.25
     }
 
-    // create material
-    this.material = new THREE.MeshPhongMaterial({
+    // create core material
+    this.coreMaterial = new THREE.MeshPhongMaterial({
       color: random.pick(this.parameters.colors),
       flatShading: true,
       shininess: 0,
       specular: 0x000000,
     })
 
-    // create mesh
-    this.mesh = new THREE.Mesh(this.geometry, this.material)
+    // create core mesh
+    this.core = new THREE.Mesh(this.coreGeometry, this.coreMaterial)
+    this.core.castShadow = true
+    this.core.receiveShadow = true
 
     // create ring of particles
     this.#initParticles()
     this.#updateParticlesCount()
+
+    // create unique mesh for planet and ring
+    this.asteroidObject = new THREE.Group()
+    this.asteroidObject.add(this.core)
+    this.asteroidObject.add(this.ring)
+
+    // update particles rotation
+    this.#updateParticlesMovement()
   }
 
   #initParticles() {
@@ -69,6 +82,7 @@ export default class Asteroid {
   #updateParticlesCount() {
     // check the current number of particles
     // compared with the one defined by params
+
     if (this.nParticles < this.parameters.params.nParticles) {
       // add particles
       for (
@@ -90,7 +104,7 @@ export default class Asteroid {
     }
 
     // update particles count
-    this.nParticles = this.parameters.params.particles
+    this.nParticles = this.parameters.params.nParticles
 
     // in order to distribute particles
     // we compute the angle step
@@ -100,5 +114,68 @@ export default class Asteroid {
     this.#updateParticlesDefinition()
   }
 
-  #updateParticlesDefinition() {}
+  #updateParticlesDefinition() {
+    for (let i = 0; i < this.nParticles; i++) {
+      const particleMesh = this.ring.children[i]
+
+      // scaling meshes randomly in the params range
+      const size =
+        this.parameters.params.minSize +
+        (this.parameters.params.maxSize - this.parameters.params.minSize) *
+          random.range(0, 1)
+      particleMesh.scale.set(size, size, size)
+
+      // set a random distance inside the params range
+      particleMesh.userData.distance =
+        this.parameters.params.minRadius +
+        (this.parameters.params.maxRadius - this.parameters.params.minRadius) *
+          random.range(0, 1)
+
+      // set angle
+      particleMesh.userData.angle = this.particlesAngleStep * i
+
+      // set speed proportional to distance
+      particleMesh.userData.angularSpeed = math.mapRange(
+        particleMesh.userData.distance,
+        this.parameters.params.minRadius,
+        this.parameters.params.maxRadius,
+        this.parameters.params.minSpeed,
+        this.parameters.params.maxSpeed
+      )
+    }
+  }
+
+  #updateParticlesMovement() {
+    for (let i = 0; i < this.nParticles; i++) {
+      // get the current particle
+      const particleMesh = this.ring.children[i]
+
+      // increase rotation angle based on its angular speed
+      particleMesh.userData.angle += particleMesh.userData.angularSpeed
+
+      // compute the new position of the particle (revolution movement)
+      // polar to cartesian coordinates
+      const x =
+        Math.cos(particleMesh.userData.angle) * particleMesh.userData.distance
+      const z =
+        Math.sin(particleMesh.userData.angle) * particleMesh.userData.distance
+      particleMesh.position.x = x
+      particleMesh.position.z = z
+
+      // add rotation on proper axis
+      particleMesh.rotation.x += random.range(0, 0.05)
+      particleMesh.rotation.y += random.range(0, 0.05)
+      particleMesh.rotation.z += random.range(0, 0.05)
+    }
+  }
+
+  #updateCoreMovement() {
+    // update rotation on proper axis
+    this.core.rotation.y -= 0.011
+  }
+
+  update() {
+    this.#updateCoreMovement()
+    this.#updateParticlesMovement()
+  }
 }

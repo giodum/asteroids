@@ -50,7 +50,7 @@ export default class Scene3D {
 
     // init asteroid
     this.asteroid = new Asteroid()
-    this.scene.add(this.asteroid.mesh)
+    this.scene.add(this.asteroid.asteroidObject)
 
     // add event listeners
     this.eventListeners()
@@ -143,6 +143,9 @@ export default class Scene3D {
 
   animate(time) {
     requestAnimationFrame((time) => this.animate(time))
+
+    // update asteroid
+    this.asteroid.update()
 
     // clear buffer and render the scene
     this.renderer.clear()

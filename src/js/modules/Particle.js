@@ -56,14 +56,6 @@ export default class Particle {
     this.geometry = random.pick(Particle.geometries)
     this.material = random.pick(Particle.materials)
 
-    // random scaling factor
-    const sizeScaling = random.range(0.8, 1.2)
-
-    // scale geometry
-    this.geometry.scale.x *= sizeScaling
-    this.geometry.scale.y *= sizeScaling
-    this.geometry.scale.z *= sizeScaling
-
     // create mesh
     this.mesh = new THREE.Mesh(this.geometry, this.material)
     this.mesh.receiveShadow = true
