@@ -1,4 +1,4 @@
-/**!  */
+/**! Code inspired by Yakudoo - https://yakudoo.com/ - https://codepen.io/Yakudoo/ */
 
 import '/src/scss/main.scss'
 

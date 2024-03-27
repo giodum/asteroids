@@ -2,16 +2,22 @@ import * as THREE from 'three'
 
 import random from 'canvas-sketch-util/random'
 
+import Parameters from './Parameters'
+import Particle from './Particle'
+
 export default class Asteroid {
-  constructor(parameters, radius = 20, color = 'orange') {
+  constructor(radius = 20) {
+    // get reference to parameters
+    this.parameters = Parameters.getInstance()
+
     // init asteroid
-    this.#initAsteroid(radius, color)
+    this.#initAsteroid(radius)
 
     // init particles
     this.#initParticles()
   }
 
-  #initAsteroid(radius, color) {
+  #initAsteroid(radius) {
     // create geometry
     this.geometry = new THREE.TetrahedronGeometry(radius, 2)
 
@@ -41,7 +47,7 @@ export default class Asteroid {
 
     // create material
     this.material = new THREE.MeshPhongMaterial({
-      color: color,
+      color: random.pick(this.parameters.colors),
       flatShading: true,
       shininess: 0,
       specular: 0x000000,
@@ -49,6 +55,10 @@ export default class Asteroid {
 
     // create mesh
     this.mesh = new THREE.Mesh(this.geometry, this.material)
+
+    // create ring of particles
+    this.#initParticles()
+    this.#updateParticlesCount()
   }
 
   #initParticles() {
@@ -57,9 +67,38 @@ export default class Asteroid {
   }
 
   #updateParticlesCount() {
-    // add particles
-    if (this.nParticles < parameters.nParticles) {
-      const p = new Particle()
+    // check the current number of particles
+    // compared with the one defined by params
+    if (this.nParticles < this.parameters.params.nParticles) {
+      // add particles
+      for (
+        let i = this.nParticles;
+        i < this.parameters.params.nParticles;
+        i++
+      ) {
+        const p = new Particle()
+        this.ring.add(p.mesh)
+      }
+    } else {
+      // remove particles
+      while (this.nParticles > this.parameters.params.nParticles) {
+        const pMesh = this.ring.children[this.nParticles - 1]
+        this.ring.remove(pMesh)
+        pMesh.userData.po = null
+        this.nParticles--
+      }
     }
+
+    // update particles count
+    this.nParticles = this.parameters.params.particles
+
+    // in order to distribute particles
+    // we compute the angle step
+    this.particlesAngleStep = (Math.PI * 2) / this.nParticles
+
+    // update particles definition
+    this.#updateParticlesDefinition()
   }
+
+  #updateParticlesDefinition() {}
 }

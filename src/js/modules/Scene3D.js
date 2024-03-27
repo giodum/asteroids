@@ -7,19 +7,10 @@ import math from 'canvas-sketch-util/math'
 import random from 'canvas-sketch-util/random'
 
 import Asteroid from './Asteroid'
+import Parameters from './Parameters'
 
 const DEV_HELPERS = true
 const DEV_WIREFRAMES = true
-
-const parameters = {
-  minRadius: 30,
-  maxRadius: 50,
-  minSpeed: 0.015,
-  maxSpeed: 0.025,
-  nParticles: 300,
-  minSize: 0.1,
-  maxSize: 2,
-}
 
 export default class Scene3D {
   // unique instance
@@ -39,6 +30,9 @@ export default class Scene3D {
       throw new Error('Scene3D has already been initialized')
     }
 
+    // get reference to parameters
+    this.parameters = Parameters.getInstance()
+
     // init renderer and scene
     this.#initRendererAndScene()
 
@@ -54,7 +48,8 @@ export default class Scene3D {
     // init lights
     this.#initLights()
 
-    this.asteroid = new Asteroid(parameters)
+    // init asteroid
+    this.asteroid = new Asteroid()
     this.scene.add(this.asteroid.mesh)
 
     // add event listeners
