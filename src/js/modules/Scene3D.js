@@ -43,7 +43,7 @@ export default class Scene3D {
     this.#initCamera()
 
     // init orbit control
-    this.#initOrbitControl()
+    // this.#initOrbitControl()
 
     // init lights
     this.#initLights()
@@ -96,8 +96,14 @@ export default class Scene3D {
       0.1,
       2000
     )
-    this.camera.position.set(0, 0, 100)
+    this.camera.position.set(0, 40, 90)
     this.camera.lookAt(new THREE.Vector3(0, 0, 0))
+    this.camera.rotateZ(-Math.PI / 12)
+
+    if (DEV_HELPERS) {
+      const cameraHelper = new THREE.CameraHelper(this.camera)
+      this.scene.add(cameraHelper)
+    }
   }
 
   #initOrbitControl() {

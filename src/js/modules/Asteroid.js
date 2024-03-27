@@ -13,9 +13,6 @@ export default class Asteroid {
 
     // init asteroid
     this.#initAsteroid(radius)
-
-    // init particles
-    this.#initParticles()
   }
 
   #initAsteroid(radius) {
@@ -147,6 +144,8 @@ export default class Asteroid {
 
   #updateParticlesMovement() {
     for (let i = 0; i < this.nParticles; i++) {
+      // console.log('updating')
+
       // get the current particle
       const particleMesh = this.ring.children[i]
 
