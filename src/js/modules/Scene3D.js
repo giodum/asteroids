@@ -9,8 +9,8 @@ import random from 'canvas-sketch-util/random'
 import Asteroid from './Asteroid'
 import Parameters from './Parameters'
 
-const DEV_HELPERS = true
-const DEV_WIREFRAMES = true
+const DEV_HELPERS = false
+const DEV_WIREFRAMES = false
 
 export default class Scene3D {
   // unique instance
@@ -43,13 +43,14 @@ export default class Scene3D {
     this.#initCamera()
 
     // init orbit control
-    // this.#initOrbitControl()
+    this.#initOrbitControl()
 
     // init lights
     this.#initLights()
 
     // init asteroid
     this.asteroid = new Asteroid()
+    this.asteroid.asteroidObject.rotation.z = Math.PI / 10
     this.scene.add(this.asteroid.asteroidObject)
 
     // add event listeners
@@ -98,7 +99,6 @@ export default class Scene3D {
     )
     this.camera.position.set(0, 40, 90)
     this.camera.lookAt(new THREE.Vector3(0, 0, 0))
-    this.camera.rotateZ(-Math.PI / 12)
 
     if (DEV_HELPERS) {
       const cameraHelper = new THREE.CameraHelper(this.camera)
