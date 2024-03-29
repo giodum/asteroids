@@ -190,9 +190,9 @@ export default class Scene3D {
 
   resize() {
     // update window info
-    this.#window.aspectRatio = window.devicePixelRatio
-    this.#window.height = window.height
-    this.#window.width = window.width
+    this.#window.height = window.innerHeight
+    this.#window.width = window.innerWidth
+    this.#window.aspectRatio = window.innerWidth / window.innerHeight
 
     // update renderer
     this.renderer.setSize(this.#window.width, this.#window.height)
